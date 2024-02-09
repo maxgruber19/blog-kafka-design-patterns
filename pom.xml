@@ -1,7 +1,7 @@
 <project>
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.maxgruber19.blog</groupId>
-    <artifactId>kafka-design-patterns</artifactId>
+    <artifactId>blog-kafka-design-patterns</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
     <modules>
