@@ -1,4 +1,4 @@
-package de.maxgruber19.blog.kafka.patterns.deadletter.model;
+package de.maxgruber19.blog.kafka.patterns.retry.model;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.common.serialization.Deserializer;

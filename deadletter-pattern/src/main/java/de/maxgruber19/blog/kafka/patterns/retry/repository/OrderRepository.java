@@ -1,6 +1,6 @@
-package de.maxgruber19.blog.kafka.patterns.deadletter.repository;
+package de.maxgruber19.blog.kafka.patterns.retry.repository;
 
-import de.maxgruber19.blog.kafka.patterns.deadletter.model.Order;
+import de.maxgruber19.blog.kafka.patterns.retry.model.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

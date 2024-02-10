@@ -1,7 +1,7 @@
-package de.maxgruber19.blog.kafka.patterns.deadletter;
+package de.maxgruber19.blog.kafka.patterns.retry.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import de.maxgruber19.blog.kafka.patterns.retry.model.Order;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,39 +11,41 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
 @Slf4j
 @Component
-class ScheduledOrderProducer {
+class OrderProducer {
+
+    private String runId = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
+    private int sequenceNumber = 0;
 
     @Autowired
-    KafkaTemplate<Integer, String> kafkaTemplate;
-
-    ObjectMapper objectMapper = new ObjectMapper();
+    KafkaTemplate<Integer, Order> kafkaTemplate;
 
     @Scheduled(fixedRate = 5000)
-    public void produceTestMessage() throws JsonProcessingException {
-        ProducerRecord<Integer, String> record = new ProducerRecord<Integer, String>("order-events-ingoing", this.generateRandomOrder());
+    public void produceTestMessage() {
+        ProducerRecord<Integer, Order> record = new ProducerRecord<>("order-events-ingoing", this.generateRandomOrder());
         kafkaTemplate.send(record);
         log.debug("sent message {}", record);
     }
 
     private static final String[] PRODUCTS = {"T-shirt", "Jeans", "Shoes", "Dress", "Jacket", "Socks", "Hat", "Bag", "Watch", "Skirt"};
 
-    public String generateRandomOrder() throws JsonProcessingException {
+    public Order generateRandomOrder() {
+        Order order = new Order();
         Random random = new Random();
         int index = random.nextInt(PRODUCTS.length);
-        Map<String, String> value = new HashMap<>();
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-        String isoTimestamp = LocalDateTime.now().format(formatter);
-        value.put("id", UUID.randomUUID().toString());
-        value.put("article", PRODUCTS[index]);
-        value.put("ordertime", isoTimestamp);
-        return objectMapper.writeValueAsString(value);
+
+        order.setId(UUID.randomUUID().toString());
+        order.setArticle(PRODUCTS[index]);
+        order.setRunId(this.runId);
+        order.setSequenceNumber(sequenceNumber++);
+        order.setOrdertime(LocalDateTime.now().format(formatter));
+
+        return order;
     }
 
 }

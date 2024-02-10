@@ -1,7 +1,13 @@
 spring:
   kafka:
     consumer:
-      value-deserializer: "de.maxgruber19.blog.kafka.patterns.deadletter.model.OrderDeserializer"
+      value-deserializer: "org.springframework.kafka.support.serializer.ErrorHandlingDeserializer"
+      auto-offset-reset: latest
+    producer:
+      value-serializer: "de.maxgruber19.blog.kafka.patterns.retry.model.OrderSerializer"
+    properties:
+      spring.deserializer.value.delegate.class: "de.maxgruber19.blog.kafka.patterns.retry.model.OrderDeserializer"
+
   datasource:
     url: "jdbc:mysql://localhost:3306/deadletter"
     username: "root"

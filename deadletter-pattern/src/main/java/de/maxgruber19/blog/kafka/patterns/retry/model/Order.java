@@ -1,4 +1,4 @@
-package de.maxgruber19.blog.kafka.patterns.deadletter.model;
+package de.maxgruber19.blog.kafka.patterns.retry.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,18 +7,23 @@ import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.util.Date;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 @Entity(name = "orders")
 public class Order {
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     private String article;
     private String ordertime;
+    private String runId;
+    private int sequenceNumber;
+    private String controller;
 
 }
