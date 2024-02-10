@@ -1,4 +1,4 @@
-package de.maxgruber19.blog.kafka.patterns.deadletter.clients.kafka;
+package de.maxgruber19.blog.kafka.patterns.deadletter.kafka;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -7,13 +7,12 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-public class ProducerFactory {
+public class Producer {
 
     @Bean
     public org.springframework.kafka.core.ProducerFactory<Integer, String> producerFactory() {

@@ -17,11 +17,8 @@ import java.util.Date;
 public class Order {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-
-    String article;
-
-    String ordertime;
+    private String article;
+    private String ordertime;
 
 }

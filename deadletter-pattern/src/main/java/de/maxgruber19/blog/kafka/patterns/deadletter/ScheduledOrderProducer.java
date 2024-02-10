@@ -1,4 +1,4 @@
-package de.maxgruber19.blog.kafka.patterns.deadletter.clients.kafka;
+package de.maxgruber19.blog.kafka.patterns.deadletter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,22 +27,23 @@ class ScheduledOrderProducer {
 
     @Scheduled(fixedRate = 5000)
     public void produceTestMessage() throws JsonProcessingException {
-        Map<String, String> value = new HashMap<>();
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-        String isoTimestamp = LocalDateTime.now().format(formatter);
-        value.put("article", this.generateRandomProduct());
-        value.put("ordertime", isoTimestamp);
-        ProducerRecord<Integer, String> record = new ProducerRecord<Integer, String>("order-events-ingoing", objectMapper.writeValueAsString(value));
+        ProducerRecord<Integer, String> record = new ProducerRecord<Integer, String>("order-events-ingoing", this.generateRandomOrder());
         kafkaTemplate.send(record);
         log.debug("sent message {}", record);
     }
 
     private static final String[] PRODUCTS = {"T-shirt", "Jeans", "Shoes", "Dress", "Jacket", "Socks", "Hat", "Bag", "Watch", "Skirt"};
 
-    public String generateRandomProduct() {
+    public String generateRandomOrder() throws JsonProcessingException {
         Random random = new Random();
         int index = random.nextInt(PRODUCTS.length);
-        return PRODUCTS[index];
+        Map<String, String> value = new HashMap<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+        String isoTimestamp = LocalDateTime.now().format(formatter);
+        value.put("id", UUID.randomUUID().toString());
+        value.put("article", PRODUCTS[index]);
+        value.put("ordertime", isoTimestamp);
+        return objectMapper.writeValueAsString(value);
     }
 
 }
