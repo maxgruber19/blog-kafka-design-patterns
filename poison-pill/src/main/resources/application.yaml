@@ -1,0 +1,21 @@
+spring:
+  kafka:
+    consumer:
+      value-deserializer: "org.springframework.kafka.support.serializer.ErrorHandlingDeserializer"
+      auto-offset-reset: latest
+    producer:
+      value-serializer: "de.maxgruber19.blog.kafka.patterns.poisonpill.model.OrderSerializer"
+    properties:
+      spring.deserializer.value.delegate.class: "de.maxgruber19.blog.kafka.patterns.poisonpill.model.OrderDeserializer"
+
+  datasource:
+    url: "jdbc:mysql://localhost:3306/poisonpilltest?createDatabaseIfNotExist=true"
+    username: "root"
+    password: "password"
+    hikari:
+      connection-timeout: 5000
+  jpa:
+    database-platform: "org.hibernate.dialect.MySQLDialect"
+    hibernate:
+      ddl-auto: create
+    generate-ddl: true
