@@ -1,0 +1,13 @@
+spring:
+  kafka:
+    consumer:
+      value-deserializer: "de.maxgruber19.blog.kafka.patterns.deadletter.model.OrderDeserializer"
+  datasource:
+    url: "jdbc:mysql://localhost:3306/deadletter"
+    username: "root"
+    password: "password"
+  jpa:
+    database-platform: "org.hibernate.dialect.MySQLDialect"
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true

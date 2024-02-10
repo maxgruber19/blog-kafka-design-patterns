@@ -14,7 +14,7 @@ public class OrderController {
     @Autowired
     OrderService orderService;
 
-    @KafkaListener(topics = "order-events-ingoing", groupId = "order-consumer")
+    @KafkaListener(topics = "order-events-ingoing", groupId = "order-consumer-1")
     public void consumeOrder(Order order) {
         long start = System.currentTimeMillis();
         log.info("read order {}", order.getId());
