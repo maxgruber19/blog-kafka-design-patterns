@@ -1,7 +1,7 @@
-package de.maxgruber19.blog.kafka.patterns.deadletter.controller;
+package de.maxgruber19.blog.kafka.patterns.poisonpill.controller;
 
-import de.maxgruber19.blog.kafka.patterns.deadletter.model.Order;
-import de.maxgruber19.blog.kafka.patterns.deadletter.service.OrderService;
+import de.maxgruber19.blog.kafka.patterns.poisonpill.model.Order;
+import de.maxgruber19.blog.kafka.patterns.poisonpill.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 
 @Slf4j
 @Controller
-public class BlockingOrderController {
+public class OrderController {
 
     @Autowired
     OrderService orderService;

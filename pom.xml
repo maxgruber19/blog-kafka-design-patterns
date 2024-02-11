@@ -6,6 +6,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>poison-pill</module>
+        <module>dead-letter</module>
     </modules>
     <dependencies>
         <dependency>
