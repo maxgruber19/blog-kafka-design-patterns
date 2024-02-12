@@ -8,6 +8,7 @@ import org.springframework.kafka.annotation.DltHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.RetryableTopic;
 import org.springframework.kafka.retrytopic.TopicSuffixingStrategy;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Controller;
 
 /**
@@ -25,6 +26,8 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class OrderController {
 
+    private static final String GROUP_ID = "shop-application";
+
     @Autowired
     OrderService orderService;
 
@@ -34,22 +37,28 @@ public class OrderController {
     // In this case the topic created will be order-events-ingoing-retry-0.
     // The attempts value has to be decremented by one to calculate the retries because the first regular attempt counts
     // as one.
-    @RetryableTopic(attempts = "2", topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE)
-    @KafkaListener(topics = "order-events-ingoing", groupId = "order-consumer-blocking")
-    public void consumeOrder(Order order) {
+    @RetryableTopic(
+            attempts = "2",
+            dltTopicSuffix = "-" + GROUP_ID + "-dlt",
+            retryTopicSuffix = "-" + GROUP_ID + "-retry",
+            topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE
+    )
+    @KafkaListener(topics = "order-events-ingoing", groupId = GROUP_ID)
+    public void consumeOrder(@Header(name = "retry_topic-attempts", required = false) byte[] retries, Order order) {
         long start = System.currentTimeMillis();
-        log.info("read valid order {}", order);
+        boolean isRetry = retries != null;
+        log.info("read valid order: {} retry: {}", order, isRetry);
         orderService.process(order);
-        log.info("put order in {}ms {}", System.currentTimeMillis() - start, order);
+        log.info("put order in {} ms: {} retry: {}", System.currentTimeMillis() - start, order, isRetry);
     }
 
     // This listener is just for observability. It will tell us when a message has been sent to the retry-topic.
-    @KafkaListener(topics = "order-events-ingoing-retry-0", groupId = "order-consumer-blocking-debug")
+    @KafkaListener(topics = "order-events-ingoing-" + GROUP_ID + "-retry-0", groupId = GROUP_ID)
     public void consumeRetriedOrder(Order order) {
         log.error("message was sent to retry-0 {}", order);
     }
 
-    // The DltHandler will read the died messages and make us know that there have been exhausted retries.
+    // The DltHandler will read the dead messages and make us know that there have been exhausted retries.
     @DltHandler
     public void handleDeadletter(Order order) {
         log.error("message was sent to dlq because retries exhausted {}", order);

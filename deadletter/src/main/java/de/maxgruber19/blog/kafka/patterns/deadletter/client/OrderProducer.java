@@ -28,7 +28,7 @@ class OrderProducer {
     @Autowired
     KafkaTemplate<Integer, Order> kafkaTemplate;
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 1000)
     public void produceTestMessage() {
         ProducerRecord<Integer, Order> record = new ProducerRecord<>("order-events-ingoing", this.generateRandomOrder());
         kafkaTemplate.send(record);

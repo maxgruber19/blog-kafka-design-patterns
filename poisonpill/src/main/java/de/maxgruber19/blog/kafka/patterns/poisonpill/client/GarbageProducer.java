@@ -21,7 +21,7 @@ class GarbageProducer {
     @Autowired
     KafkaTemplate<Integer, String> kafkaTemplate;
 
-    @Scheduled(fixedRate = 15000)
+    @Scheduled(fixedDelay = 15000)
     public void produceTestMessage() {
         log.info("sending garbage");
         ProducerRecord<Integer, String> record = new ProducerRecord<>("order-events-ingoing", "Let me check how fault tolerant you really are, kafka.");
