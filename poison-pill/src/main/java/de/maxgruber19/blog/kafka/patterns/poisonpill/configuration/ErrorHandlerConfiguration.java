@@ -4,6 +4,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.listener.CommonLoggingErrorHandler;
 
+
+/**
+ * ErrorHandler will log exceptions and make the listener continue reading.
+ */
 @Configuration
 public class ErrorHandlerConfiguration {
 
