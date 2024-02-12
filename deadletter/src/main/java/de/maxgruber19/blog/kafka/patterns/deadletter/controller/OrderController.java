@@ -4,6 +4,7 @@ import de.maxgruber19.blog.kafka.patterns.deadletter.model.Order;
 import de.maxgruber19.blog.kafka.patterns.deadletter.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.DltHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.RetryableTopic;
 import org.springframework.kafka.retrytopic.TopicSuffixingStrategy;
@@ -48,9 +49,9 @@ public class OrderController {
         log.error("message was sent to retry-0 {}", order);
     }
 
-    // This listener is just for observability. It will tell us when a message has been sent to the retry-topic.
-    @KafkaListener(topics = "order-events-ingoing-dlt", groupId = "order-consumer-blocking-debug")
-    public void consumeDlqOrder(Order order) {
+    // The DltHandler will read the died messages and make us know that there have been exhausted retries.
+    @DltHandler
+    public void handleDeadletter(Order order) {
         log.error("message was sent to dlq because retries exhausted {}", order);
     }
 
