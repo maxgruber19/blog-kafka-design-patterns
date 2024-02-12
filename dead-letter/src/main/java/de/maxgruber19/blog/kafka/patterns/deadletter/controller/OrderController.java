@@ -9,8 +9,6 @@ import org.springframework.kafka.annotation.RetryableTopic;
 import org.springframework.kafka.retrytopic.TopicSuffixingStrategy;
 import org.springframework.stereotype.Controller;
 
-import java.net.ConnectException;
-
 /**
  * This controller will receive order events from order-events-ingoing and passes them through the mvc structure
  * to store it in a mysql database in the end. If the database breaks down the client will need to handle the failure.
@@ -32,13 +30,14 @@ public class OrderController {
     // This Listener will retry a message one time. Some exceptions are worth a retry others may be not.
     // Messages with exhausted retries and messages with excluded exceptions will be sent to deadletter topic.
     // A topic will be automatically created which is named like <source-topic>-retry-<retry-attempt starting from 0>
-    // In this case the topic created will be order-events-ingoing-retry-0
+    // In this case the topic created will be order-events-ingoing-retry-0.
+    // The attempts value has to be decremented by one to calculate the retries because the first regular attempt counts
+    // as one.
     @RetryableTopic(attempts = "2", topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE)
     @KafkaListener(topics = "order-events-ingoing", groupId = "order-consumer-blocking")
     public void consumeOrder(Order order) {
         long start = System.currentTimeMillis();
         log.info("read order {}", order.getId());
-        order.setController("blocking");
         orderService.process(order);
         log.info("processed order within {}ms {}", System.currentTimeMillis() - start, order.getId());
     }

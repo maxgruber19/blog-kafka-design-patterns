@@ -12,6 +12,11 @@ import org.springframework.kafka.core.KafkaTemplate;
 import java.util.HashMap;
 import java.util.Map;
 
+
+/**
+ * This factory builds a KafkaTemplate that sends Messages to Kafka that use Integers as keys and Orders as values.
+ * Custom Serializers will be used to produce Order pojos.
+ */
 @Slf4j
 public class OrderProducerFactory {
 
@@ -31,7 +36,7 @@ public class OrderProducerFactory {
 
     @Bean
     public KafkaTemplate<Integer, Order> kafkaTemplate() {
-        return new KafkaTemplate<Integer, Order>(producerFactory());
+        return new KafkaTemplate<>(producerFactory());
     }
 
 

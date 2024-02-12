@@ -13,12 +13,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.Random;
 import java.util.UUID;
 
+/**
+ * This producer will send orders to the topic order-events-ingoing scheduled by the spring scheduler. To have some
+ * funny testdata the orders will be generated with some simple example articles.
+ */
 @Slf4j
 @Component
 class OrderProducer {
 
     private String runId = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
     private int sequenceNumber = 0;
+    private static final String[] PRODUCTS = {"T-shirt", "Jeans", "Shoes", "Dress", "Jacket", "Socks", "Hat", "Bag", "Watch", "Skirt"};
 
     @Autowired
     KafkaTemplate<Integer, Order> kafkaTemplate;
@@ -29,8 +34,6 @@ class OrderProducer {
         kafkaTemplate.send(record);
         log.debug("sent message {}", record);
     }
-
-    private static final String[] PRODUCTS = {"T-shirt", "Jeans", "Shoes", "Dress", "Jacket", "Socks", "Hat", "Bag", "Watch", "Skirt"};
 
     public Order generateRandomOrder() {
         Order order = new Order();
