@@ -9,4 +9,9 @@ This guide will deliver further information and a ready to run code example for 
 
 ## Prerequisites
 
-We'll need a Apache Kafka Cluster with 
+We'll need a Apache Kafka Cluster with the broker and control center enabled. In addition we will need a database to store the orders in. A simple MySQL database will fit perfectly fine.
+
+A docker-compose.yaml is provided and will start Apache Kafka and MySQL on your machine by invoking
+ ```bash
+ docker-compose up -d prerequisites/docker-compose.yaml
+ ```
