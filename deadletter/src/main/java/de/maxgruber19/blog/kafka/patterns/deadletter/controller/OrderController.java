@@ -37,21 +37,21 @@ public class OrderController {
     @KafkaListener(topics = "order-events-ingoing", groupId = "order-consumer-blocking")
     public void consumeOrder(Order order) {
         long start = System.currentTimeMillis();
-        log.info("read order {}", order.getId());
+        log.info("read valid order {}", order);
         orderService.process(order);
-        log.info("processed order within {}ms {}", System.currentTimeMillis() - start, order.getId());
+        log.info("put order in {}ms {}", System.currentTimeMillis() - start, order);
     }
 
     // This listener is just for observability. It will tell us when a message has been sent to the retry-topic.
     @KafkaListener(topics = "order-events-ingoing-retry-0", groupId = "order-consumer-blocking-debug")
     public void consumeRetriedOrder(Order order) {
-        log.error("message was sent to retry-0 {}", order.getId());
+        log.error("message was sent to retry-0 {}", order);
     }
 
     // This listener is just for observability. It will tell us when a message has been sent to the retry-topic.
     @KafkaListener(topics = "order-events-ingoing-dlt", groupId = "order-consumer-blocking-debug")
     public void consumeDlqOrder(Order order) {
-        log.error("message was sent to dlq because retries exhausted {}", order.getId());
+        log.error("message was sent to dlq because retries exhausted {}", order);
     }
 
 }

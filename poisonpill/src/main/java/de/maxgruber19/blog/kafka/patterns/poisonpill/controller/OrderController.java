@@ -17,10 +17,10 @@ public class OrderController {
     @KafkaListener(topics = "order-events-ingoing", groupId = "order-consumer-blocking")
     public void consumeOrder(Order order) {
         long start = System.currentTimeMillis();
-        log.info("read order {}", order);
+        log.info("read valid order {}", order);
         order.setController("blocking");
         orderService.process(order);
-        log.info("processed order within {}ms {}", System.currentTimeMillis() - start, order);
+        log.info("put order in {}ms {}", System.currentTimeMillis() - start, order);
     }
 
 

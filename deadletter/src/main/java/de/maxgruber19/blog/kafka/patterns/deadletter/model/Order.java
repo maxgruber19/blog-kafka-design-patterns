@@ -24,4 +24,9 @@ public class Order {
     private int sequenceNumber;
     private String controller;
 
+    @Override
+    public String toString() {
+        return "{ sequenceNo: " + this.sequenceNumber + ", id: " + this.id + ", article: " + this.article + " }";
+    }
+
 }
