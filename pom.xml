@@ -5,8 +5,8 @@
     <version>1.0.0</version>
     <packaging>pom</packaging>
     <modules>
-        <module>poison-pill</module>
-        <module>dead-letter</module>
+        <module>poisonpill</module>
+        <module>deadletter</module>
     </modules>
     <dependencies>
         <dependency>
